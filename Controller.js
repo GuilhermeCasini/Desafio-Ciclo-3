@@ -437,28 +437,70 @@ app.listen(port,(req,res)=>{
 });
 
 
+app.get('/cliente/:id/pedidos', async(req,res)=>{
+    await pedido.findAll({
+        where: {ClienteId: req.params.id}})
+    .then(ped=>{
+        return res.json({
+            error: false,
+            ped 
+        });
+    }).catch(function(erro){
+        return res.status(400).json({
+            error: true,
+            message: "Não foi possivel encontrar pedidos."
+        })
+    });
+});
+
+app.get('/cliente/:id/compras', async(req,res)=>{
+    await itemcompra.findAll({
+        where: {CompraId: req.params.id}})
+    .then(item=>{
+        return res.json({
+            error: false,
+            item
+        });
+    }).catch(function(erro){
+        return res.status(400).json({
+            error: true,
+            message: "Erro: não foi possivel conectar!"
+        })
+    });
+});
+
+app.get('/servico/:id/pedidos', async(req,res)=>{
+    await itempedido.findAll({
+        where: {ServicoId: req.params.id}})
+    .then(item=>{
+        return res.json({
+            error: false,
+            item
+        });
+    }).catch(function(erro){
+        return res.status(400).json({
+            error: true,
+            message: "Erro: não foi possivel conectar!"
+        })
+    });
+});
+app.get('/produto/:id/compras', async(req,res)=>{
+    await itemcompra.findAll({
+        where: {ProdutoId: req.params.id}})
+    .then(item=>{
+        return res.json({
+            error: false,
+            item
+        });
+    }).catch(function(erro){
+        return res.status(400).json({
+            error: true,
+            message: "Erro: não foi possivel conectar!"
+        })
+    });
+});
 
 
-
-
-
-
-//aula
-
-// app.get('/servico/:id', async(req,res)=>{
-//     await servico.findByPk(req.params.id)
-//     .then(serv=>{
-//         return res.json({
-//             error: false,
-//             serv
-//         });
-//     }).catch(function(erro){
-//         return res.status(400).json({
-//             error: true,
-//             message: "Erro: não foi possivel conectar!"
-//         })
-//     });
-// });
 // app.get('/produto/:nome', async(req,res)=>{
 //     await produto.findByPk(req.params.id)
 //     .then(serv=>{
@@ -565,32 +607,32 @@ app.listen(port,(req,res)=>{
     //     });
     // });
 
-    // app.put('/cliente/:id/pedido',async(req, res)=>{
-    //     const ped = {
-    //         data: req.body.data,
-    //         ClienteId: req.params.id
-    //     }
+    app.put('/cliente/:id/pedido',async(req, res)=>{
+        const ped = {
+            data: req.body.data,
+            ClienteId: req.params.id
+        }
     
-    //     if(!await cliente.findByPk(req.params.id)){
-    //         return res.status(400).json({
-    //             error: true,
-    //             message: 'Cliente não existe.'
-    //         });
-    //     };
+        if(!await cliente.findByPk(req.params.id)){
+            return res.status(400).json({
+                error: true,
+                message: 'Cliente não existe.'
+            });
+        };
     
-    //     await pedido.update(ped,{
-    //         where: Sequelize.and({ClienteId: req.params.id},
-    //             {id: req.body.id})
-    //     }).then(pedidos=>{
-    //         return res.json({
-    //             error: false,
-    //             messagem: 'Pedido alterado com sucesso.',
-    //             pedidos
-    //         });
-    //     }).catch(erro=>{
-    //         return res.status(400).json({
-    //             error: true,
-    //             message: "Erro: não foi possível alterar."
-    //         });
-    //     });
-    // });
+        await pedido.update(ped,{
+            where: Sequelize.and({ClienteId: req.params.id},
+                {id: req.body.id})
+        }).then(pedidos=>{
+            return res.json({
+                error: false,
+                messagem: 'Pedido alterado com sucesso.',
+                pedidos
+            });
+        }).catch(erro=>{
+            return res.status(400).json({
+                error: true,
+                message: "Erro: não foi possível alterar."
+            });
+        });
+    });
